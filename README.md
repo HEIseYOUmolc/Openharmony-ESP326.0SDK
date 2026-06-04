@@ -1,5 +1,34 @@
 # OpenHarmony 移植 ESP32 6.0 SDK
 
+## 上游源码来源
+
+本工程是在 ESP-IDF SDK 与 OpenHarmony 6.0 LiteOS-M 基础上整理的 ESP32 轻量移植框架。阅读和复现本项目时，请优先确认以下上游源码来源。
+
+| 上游项目 | 仓库地址 | 本项目基线 |
+| --- | --- | --- |
+| ESP-IDF SDK | [https://github.com/espressif/esp-idf](https://github.com/espressif/esp-idf) | `v6.0.1` |
+| OpenHarmony 源码清单 | [https://gitcode.com/openharmony/manifest](https://gitcode.com/openharmony/manifest) | `refs/tags/OpenHarmony-v6.0-Release` |
+| OpenHarmony 6.0 Release 说明 | [https://github.com/openharmony/docs/blob/master/en/release-notes/OpenHarmony-v6.0-release.md](https://github.com/openharmony/docs/blob/master/en/release-notes/OpenHarmony-v6.0-release.md) | OpenHarmony 6.0 Release |
+
+获取 ESP-IDF SDK：
+
+```bash
+git clone -b v6.0.1 --recursive https://github.com/espressif/esp-idf.git
+cd esp-idf
+./install.sh
+. ./export.sh
+```
+
+获取 OpenHarmony 6.0 Release 源码：
+
+```bash
+repo init -u https://gitcode.com/openharmony/manifest -b refs/tags/OpenHarmony-v6.0-Release --no-repo-verify
+repo sync -c
+repo forall -c 'git lfs pull'
+```
+
+## 项目简介
+
 本仓库是一个基于 ESP-IDF 6.0.1 的 OpenHarmony 6.0 LiteOS-M 轻量级移植工程，目标是在 ESP32 系列芯片上验证 OpenHarmony 风格的系统适配接口、目标芯片适配层和示例应用。
 
 工程当前定位为移植框架和验证脚手架，包含端口抽象层、架构适配层、目标芯片适配层、板级配置模板、内核兼容层以及多组可选 Demo。
