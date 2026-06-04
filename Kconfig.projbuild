@@ -1,0 +1,59 @@
+﻿menu "OpenHarmony ESP32 Port"
+
+choice OHOS_DEMO_SELECT
+    prompt "Select OpenHarmony demo"
+    default OHOS_DEMO_GPIO_BLINK
+
+    config OHOS_DEMO_GPIO_BLINK
+        bool "GPIO blink"
+
+    config OHOS_DEMO_UART_ECHO
+        bool "UART echo"
+
+    config OHOS_DEMO_I2C_SCAN
+        bool "I2C scan"
+
+    config OHOS_DEMO_SPI_LOOP
+        bool "SPI loopback"
+
+    config OHOS_DEMO_WIFI_STA
+        bool "Wi-Fi station"
+
+    config OHOS_DEMO_TCP_HTTP
+        bool "TCP and HTTP client"
+endchoice
+
+config OHOS_TICK_HZ
+    int "OpenHarmony tick rate"
+    range 100 1000
+    default 1000
+
+config OHOS_DEMO_GPIO_PIN
+    int "GPIO pin for blink demo"
+    default 2
+
+config OHOS_DEMO_UART_PORT
+    int "UART port for echo demo"
+    default 0
+
+config OHOS_DEMO_I2C_PORT
+    int "I2C port"
+    default 0
+
+config OHOS_DEMO_SPI_HOST
+    int "SPI host"
+    default 2
+
+config OHOS_WIFI_SSID
+    string "Wi-Fi SSID"
+    default "ssid"
+
+config OHOS_WIFI_PASS
+    string "Wi-Fi password"
+    default "password"
+
+config OHOS_HTTP_URL
+    string "HTTP URL"
+    default "http://example.com/"
+
+endmenu

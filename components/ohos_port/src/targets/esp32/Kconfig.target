@@ -1,0 +1,3 @@
+﻿config OHOS_TARGET_ESP32
+    bool
+    default y if IDF_TARGET_ESP32

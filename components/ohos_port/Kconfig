@@ -1,0 +1,15 @@
+﻿menu "OHOS Port Layer"
+
+config OHOS_PORT_ENABLE_TICK_TIMER
+    bool "Enable timer-driven OHOS tick hook"
+    default y
+
+config OHOS_PORT_HEAP_FALLBACK_SIZE
+    int "Fallback heap size in bytes"
+    default 65536
+
+config OHOS_PORT_LOG_BOOT_BANNER
+    bool "Print OHOS boot banner"
+    default y
+
+endmenu

@@ -1,0 +1,7 @@
+﻿menu "OHOS Kernel Shim"
+
+config OHOS_SHIM_ENABLE
+    bool "Enable lightweight OpenHarmony kernel shim"
+    default y
+
+endmenu

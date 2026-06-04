@@ -1,0 +1,19 @@
+﻿board: esp32c6_devkitc_1
+target: esp32c6
+uart:
+  port: 0
+  tx_pin: 16
+  rx_pin: 17
+i2c:
+  port: 0
+  sda_pin: 6
+  scl_pin: 7
+spi:
+  host: 2
+  mosi_pin: 18
+  miso_pin: 19
+  sclk_pin: 20
+  cs_pin: 21
+wifi:
+  ssid: "change-me"
+  password: "change-me"
