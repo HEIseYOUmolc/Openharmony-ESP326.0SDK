@@ -8,6 +8,12 @@ For each new `idf.py set-target <idf_target>` chip, add the following:
 4. A board profile yaml in `board_profile/`
 5. A source-selection entry in `components/ohos_port/CMakeLists.txt`
 
+Current target directories:
+
+- `esp32`
+- `esp32s3`
+- `esp32c6`
+
 `target_port.c` must provide:
 - `void ohos_port_target_init(void)`
 - `const ohos_port_board_profile_t *ohos_port_board_profile_get(void)`

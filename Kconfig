@@ -1,0 +1,86 @@
+mainmenu "OpenHarmony ESP32 Port Configuration"
+
+menu "Target Chip"
+
+choice OHOS_TARGET_CHOICE
+    prompt "ESP-IDF target chip"
+    default OHOS_TARGET_ESP32
+    help
+      Select the ESP32-family chip target used by this project.
+      The Makefile applies the selected target through idf.py set-target.
+
+config OHOS_TARGET_ESP32
+    bool "ESP32"
+    help
+      Select ESP32 Xtensa target.
+
+config OHOS_TARGET_ESP32S3
+    bool "ESP32-S3"
+    help
+      Select ESP32-S3 Xtensa LX7 target.
+
+config OHOS_TARGET_ESP32C6
+    bool "ESP32-C6"
+    help
+      Select ESP32-C6 RISC-V 32-bit target.
+
+endchoice
+
+config OHOS_IDF_TARGET
+    string
+    default "esp32" if OHOS_TARGET_ESP32
+    default "esp32s3" if OHOS_TARGET_ESP32S3
+    default "esp32c6" if OHOS_TARGET_ESP32C6
+
+endmenu
+
+menu "Yango Project To Run"
+
+choice OHOS_PROJECT_CHOICE
+    prompt "vendor/yango project to run"
+    default OHOS_DEMO_GPIO_BLINK
+    help
+      Select which vendor/yango project will run after build and flash.
+
+config OHOS_DEMO_GPIO_BLINK
+    bool "vendor/yango/gpio_blink - GPIO blink"
+    help
+      Run the GPIO blink project.
+
+config OHOS_DEMO_UART_ECHO
+    bool "vendor/yango/uart_echo - UART echo"
+    help
+      Run the UART echo project.
+
+config OHOS_DEMO_I2C_SCAN
+    bool "vendor/yango/i2c_scan - I2C scan"
+    help
+      Run the I2C bus scan project.
+
+config OHOS_DEMO_SPI_LOOP
+    bool "vendor/yango/spi_loop - SPI loopback"
+    help
+      Run the SPI loopback project.
+
+config OHOS_DEMO_WIFI_STA
+    bool "vendor/yango/wifi_sta - Wi-Fi station"
+    help
+      Run the Wi-Fi station project.
+
+config OHOS_DEMO_TCP_HTTP
+    bool "vendor/yango/tcp_http - TCP and HTTP client"
+    help
+      Run the TCP/HTTP networking project.
+
+endchoice
+
+config OHOS_SELECTED_PROJECT
+    string
+    default "gpio_blink" if OHOS_DEMO_GPIO_BLINK
+    default "uart_echo" if OHOS_DEMO_UART_ECHO
+    default "i2c_scan" if OHOS_DEMO_I2C_SCAN
+    default "spi_loop" if OHOS_DEMO_SPI_LOOP
+    default "wifi_sta" if OHOS_DEMO_WIFI_STA
+    default "tcp_http" if OHOS_DEMO_TCP_HTTP
+
+endmenu

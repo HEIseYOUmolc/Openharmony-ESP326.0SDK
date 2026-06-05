@@ -9,7 +9,7 @@
 主要目标：
 
 - 维护 OpenHarmony/LiteOS-M 到 ESP32 的移植层。
-- 支持 ESP32 Xtensa 和 ESP32-C6 RISC-V 目标。
+- 支持 ESP32 Xtensa、ESP32-S3 Xtensa LX7 和 ESP32-C6 RISC-V 目标。
 - 保持 Demo、板级配置、端口抽象和文档清晰可验证。
 - 让仓库可直接在 GitHub 上展示、克隆、构建和继续迭代。
 
@@ -43,6 +43,7 @@ https://github.com/HEIseYOUmolc/Openharmony-ESP326.0SDK.git
 - `AGENTS.md`
 - `docs/`
 - `main/`
+- `vendor/yango/`
 - `components/`
 - `board_profile/`
 - `tools/`
@@ -95,26 +96,238 @@ git diff -- README.md
 rg --files
 ```
 
+## 芯片选择入口
+
+本项目提供根目录 `Makefile`，用于让用户通过 `make menuconfig` 选择目标芯片和当前要跑的项目/Demo。
+
+```bash
+make menuconfig
+```
+
+该命令参考 OpenHarmony LiteOS-M 的 Makefile/Kconfig 组织方式：
+
+- 根目录 `Kconfig` 定义芯片选择项。
+- 根目录 `Makefile` 优先调用系统 `menuconfig` 工具生成 `.ohos_target.config`。
+- 如果系统没有 `menuconfig` 工具，则回退到 `tools/select_target.py --menuconfig` 文本菜单。
+- `tools/select_target.py` 负责把 Kconfig 输出同步为 `.ohos_target`。
+
+`make menuconfig` 顶层包含两个菜单：
+
+- `Target Chip`：在 ESP32、ESP32-S3 与 ESP32-C6 之间选择目标芯片，写入 `.ohos_target`。
+- `Project To Run`：选择当前要跑的项目/Demo，写入 `.ohos_project`，并同步到 ESP-IDF `sdkconfig`。
+
+当前项目/Demo 可选值：
+
+- `gpio_blink`
+- `uart_echo`
+- `i2c_scan`
+- `spi_loop`
+- `wifi_sta`
+- `tcp_http`
+
+加载 ESP-IDF 环境后，`make build` 或 `make set-target` 会执行：
+
+```bash
+idf.py set-target <selected-target>
+```
+
+`.ohos_target` 和 `.ohos_target.config` 是本地配置文件，不应提交到 GitHub。
+
+常用入口：
+
+```bash
+make setup-idf
+make setup-ohos
+make target-menuconfig
+make print-target
+make print-project
+make set-project PROJECT=gpio_blink
+make idf-menuconfig
+make build
+make flash
+make monitor
+```
+
+`make target-menuconfig` 只选择芯片。`make set-project PROJECT=<name>` 可直接设置当前要跑的项目。`make set-target` 会在调用 `idf.py set-target` 前检查 `build/`。如果 `build/` 不是 ESP-IDF CMake 构建目录，会先重命名为 `build.non-cmake.<timestamp>`，避免 `idf.py` 因拒绝删除未知目录而失败。
+
+代理如需新增芯片，应同步更新：
+
+- `tools/select_target.py`
+- `Kconfig`
+- `README.md`
+- 对应的 `sdkconfig.defaults.<target>`
+- `components/ohos_port/src/targets/<target>/`
+- `board_profile/<board>_<target>.yaml`
+
 ## 构建验证
 
-构建前需要先加载 ESP-IDF 6.0.1 环境：
+## Yango 工程目录约定
+
+后续所有可运行工程必须放在：
+
+```text
+vendor/yango/<project_name>
+```
+
+`main/` 只允许保留 ESP-IDF 启动入口和工程分发器，不再存储具体工程源码。当前已有工程：
+
+```text
+vendor/yango/gpio_blink
+vendor/yango/uart_echo
+vendor/yango/i2c_scan
+vendor/yango/spi_loop
+vendor/yango/wifi_sta
+vendor/yango/tcp_http
+```
+
+新增工程时，代理必须同步更新：
+
+- `vendor/yango/CMakeLists.txt`
+- `Kconfig`
+- `Kconfig.projbuild`
+- `tools/select_target.py`
+- `README.md`
+- `AGENTS.md`
+
+`make menuconfig` 中的 `Yango Project To Run` 菜单必须能选择新工程。不要把新工程放回 `main/` 或 `main/demos/`。
+
+如果本地没有 ESP-IDF 6.0.1，优先使用项目内置安装入口：
+
+```bash
+make setup-idf
+```
+
+该命令会把 ESP-IDF 安装到仓库外层目录：
+
+```text
+../esp-idf-6.0.1
+../.espressif
+../export_esp_idf.sh
+```
+
+如果已经有 ESP-IDF 环境，也可以手动加载：
 
 ```bash
 . $IDF_PATH/export.sh
 ```
 
+项目 `Makefile` 默认会通过 `tools/idf_env.sh` 自动加载 `../esp-idf-6.0.1`，所以代理通常可以直接执行 `make build`。
+
+## 标准 OpenHarmony 源码
+
+本项目不能只依赖 `components/ohos_kernel_shim`。如需接入真实 LiteOS-M，应先拉取标准 OpenHarmony 6.0 Release 源码树：
+
+```bash
+make setup-ohos
+```
+
+该命令使用：
+
+```text
+https://gitcode.com/openharmony/manifest
+refs/tags/OpenHarmony-v6.0-Release
+```
+
+默认下载到：
+
+```text
+../openharmony-v6.0-release
+```
+
+LiteOS-M 源码路径：
+
+```text
+../openharmony-v6.0-release/kernel/liteos_m
+```
+
+`tools/fetch_upstream.sh` 只用于获取轻量参考仓库，不等同于标准 OpenHarmony 源码树。
+
+OpenHarmony 6.1 官方 release notes 中的源码获取方式更正规，要求使用 GitCode repo launcher。代理应优先使用：
+
+```bash
+bash tools/install_gitcode_repo.sh
+export PATH="$HOME/bin:$PATH"
+make setup-ohos OHOS_VERSION=6.1
+```
+
+可选配置：
+
+```bash
+OHOS_DOWNLOAD_MODE=ssh make setup-ohos OHOS_VERSION=6.1
+OHOS_DOWNLOAD_MODE=https make setup-ohos OHOS_VERSION=6.1
+OHOS_REF_KIND=branch make setup-ohos OHOS_VERSION=6.1
+OHOS_REF_KIND=tag make setup-ohos OHOS_VERSION=6.1
+```
+
+如果项目仍需保持 OpenHarmony 6.0 基线，则使用：
+
+```bash
+make setup-ohos OHOS_VERSION=6.0
+```
+
+## LiteOS-M 接入指导
+
+接入 LiteOS-M 时，应以标准 OpenHarmony 源码树中的 `kernel/liteos_m` 为基线，或参考独立仓库：
+
+```text
+https://gitcode.com/openharmony/kernel_liteos_m
+```
+
+`kernel_liteos_m` 的关键结构包括：
+
+- `arch/`：CPU 架构层，包含 ARM、RISC-V、Xtensa 等。
+- `components/`：可选内核组件。
+- `drivers/`：驱动 Kconfig。
+- `kal/`：内核抽象层。
+- `kernel/`：最小内核功能集。
+- `testsuites/`：内核测试。
+- `tools/`、`utils/`：工具和通用代码。
+
+本仓库当前的 `components/ohos_kernel_shim` 只是过渡层。后续代理不得把 shim 当作最终 LiteOS-M 实现，应按以下阶段推进：
+
+1. 先保证标准源码存在：
+   ```bash
+   make setup-ohos OHOS_VERSION=6.0
+   # 或
+   make setup-ohos OHOS_VERSION=6.1
+   ```
+2. 在 `components/ohos_port` 中保留 ESP32/ESP32-S3/ESP32-C6 板级和 SoC 适配边界。
+3. 从 `../openharmony-v*/kernel/liteos_m` 引入真实 LiteOS-M 头文件、Kconfig、核心源文件和必要组件。
+4. 优先复用上游 `arch/xtensa`、`arch/risc-v`，只有 ESP32 差异点才放进本仓库 target 层。
+5. 将 ESP-IDF 提供的能力映射到 LiteOS-M：
+   - 中断入口、出口、临界区
+   - tick 定时器和调度 tick
+   - heap region
+   - task/semaphore/mutex/queue/timer
+   - UART console、日志和 panic 输出
+6. 在接入真实 LiteOS-M 前，不要扩大 demo 范围；先验证启动、tick、任务、堆和 GPIO/UART。
+7. 每次替换 shim 行为时，README 和 `docs/PORTING_GUIDE.md` 必须同步说明当前接入阶段。
+
+验收标准：
+
+- `components/ohos_kernel_shim` 中弱实现逐步减少。
+- 构建日志能说明正在编译真实 `kernel/liteos_m` 源文件。
+- 最小 LiteOS-M 任务能在 ESP32、ESP32-S3、ESP32-C6 上启动并输出日志。
+
 验证 ESP32：
 
 ```bash
-idf.py set-target esp32
-idf.py build
+python3 tools/select_target.py --set-target esp32
+make build
 ```
 
 验证 ESP32-C6：
 
 ```bash
-idf.py set-target esp32c6
-idf.py build
+python3 tools/select_target.py --set-target esp32c6
+make build
+```
+
+验证 ESP32-S3：
+
+```bash
+python3 tools/select_target.py --set-target esp32s3
+make build
 ```
 
 如果本地缺少 ESP-IDF 环境，代理应明确说明未能运行构建，而不是声称构建通过。

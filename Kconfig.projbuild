@@ -1,26 +1,26 @@
-﻿menu "OpenHarmony ESP32 Port"
+menu "Yango Vendor Projects"
 
 choice OHOS_DEMO_SELECT
-    prompt "Select OpenHarmony demo"
+    prompt "Select vendor/yango project to run"
     default OHOS_DEMO_GPIO_BLINK
 
     config OHOS_DEMO_GPIO_BLINK
-        bool "GPIO blink"
+        bool "vendor/yango/gpio_blink - GPIO blink"
 
     config OHOS_DEMO_UART_ECHO
-        bool "UART echo"
+        bool "vendor/yango/uart_echo - UART echo"
 
     config OHOS_DEMO_I2C_SCAN
-        bool "I2C scan"
+        bool "vendor/yango/i2c_scan - I2C scan"
 
     config OHOS_DEMO_SPI_LOOP
-        bool "SPI loopback"
+        bool "vendor/yango/spi_loop - SPI loopback"
 
     config OHOS_DEMO_WIFI_STA
-        bool "Wi-Fi station"
+        bool "vendor/yango/wifi_sta - Wi-Fi station"
 
     config OHOS_DEMO_TCP_HTTP
-        bool "TCP and HTTP client"
+        bool "vendor/yango/tcp_http - TCP and HTTP client"
 endchoice
 
 config OHOS_TICK_HZ
@@ -29,11 +29,11 @@ config OHOS_TICK_HZ
     default 1000
 
 config OHOS_DEMO_GPIO_PIN
-    int "GPIO pin for blink demo"
+    int "GPIO pin for blink project"
     default 2
 
 config OHOS_DEMO_UART_PORT
-    int "UART port for echo demo"
+    int "UART port for echo project"
     default 0
 
 config OHOS_DEMO_I2C_PORT

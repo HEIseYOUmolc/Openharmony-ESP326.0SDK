@@ -1,0 +1,20 @@
+idf_component_register(
+    SRCS
+        "gpio_blink/gpio_blink.c"
+        "uart_echo/uart_echo.c"
+        "i2c_scan/i2c_scan.c"
+        "spi_loop/spi_loop.c"
+        "wifi_sta/wifi_sta.c"
+        "tcp_http/tcp_http.c"
+    INCLUDE_DIRS
+        "include"
+    REQUIRES
+        ohos_port
+        nvs_flash
+        esp_netif
+        esp_event
+        esp_wifi
+        esp_http_client
+        lwip
+        driver
+)

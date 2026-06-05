@@ -1,24 +1,11 @@
-﻿idf_component_register(
+idf_component_register(
     SRCS
         "main.c"
         "demo_runner.c"
-        "demos/demo_gpio_blink.c"
-        "demos/demo_uart_echo.c"
-        "demos/demo_i2c_scan.c"
-        "demos/demo_spi_loop.c"
-        "demos/demo_wifi_sta.c"
-        "demos/demo_tcp_http.c"
     INCLUDE_DIRS
         "."
-        "demos"
     REQUIRES
-        ohos_port
-        ohos_kernel_shim
+        ohos_liteos_m
+        yango
         nvs_flash
-        esp_netif
-        esp_event
-        esp_wifi
-        esp_http_client
-        lwip
-        driver
 )

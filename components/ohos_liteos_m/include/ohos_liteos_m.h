@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int ohos_kernel_bootstrap(void);
+int ohos_liteos_start(void);
 
 #ifdef __cplusplus
 }

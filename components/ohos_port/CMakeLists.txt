@@ -18,6 +18,8 @@ endif()
 
 if(IDF_TARGET STREQUAL "esp32")
     target_sources(${COMPONENT_LIB} PRIVATE "src/targets/esp32/target_port.c")
+elseif(IDF_TARGET STREQUAL "esp32s3")
+    target_sources(${COMPONENT_LIB} PRIVATE "src/targets/esp32s3/target_port.c")
 elseif(IDF_TARGET STREQUAL "esp32c6")
     target_sources(${COMPONENT_LIB} PRIVATE "src/targets/esp32c6/target_port.c")
 else()

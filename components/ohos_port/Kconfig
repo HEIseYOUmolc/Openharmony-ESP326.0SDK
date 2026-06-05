@@ -1,4 +1,4 @@
-﻿menu "OHOS Port Layer"
+menu "OHOS Port Layer"
 
 config OHOS_PORT_ENABLE_TICK_TIMER
     bool "Enable timer-driven OHOS tick hook"

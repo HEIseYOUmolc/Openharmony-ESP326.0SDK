@@ -1,0 +1,19 @@
+board: esp32s3_devkitc_1
+target: esp32s3
+uart:
+  port: 0
+  tx_pin: 43
+  rx_pin: 44
+i2c:
+  port: 0
+  sda_pin: 8
+  scl_pin: 9
+spi:
+  host: 2
+  mosi_pin: 11
+  miso_pin: 13
+  sclk_pin: 12
+  cs_pin: 10
+wifi:
+  ssid: "change-me"
+  password: "change-me"

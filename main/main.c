@@ -1,5 +1,5 @@
-﻿#include "demo_runner.h"
-#include "ohos_kernel_shim.h"
+#include "demo_runner.h"
+#include "ohos_liteos_m.h"
 
 #include "esp_log.h"
 #include "nvs_flash.h"
@@ -14,8 +14,8 @@ void app_main(void)
         return;
     }
 
-    if (ohos_kernel_bootstrap() != 0) {
-        ESP_LOGE(TAG, "OpenHarmony bootstrap failed");
+    if (ohos_liteos_start() != 0) {
+        ESP_LOGE(TAG, "LiteOS-M startup failed");
         return;
     }
 

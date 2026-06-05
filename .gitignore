@@ -5,6 +5,10 @@ dependencies.lock
 sdkconfig
 sdkconfig.old
 sdkconfig.ci
+.ohos_target
+.ohos_project
+.ohos_target.config
+.ohos_target.config.old
 
 # Python caches
 __pycache__/

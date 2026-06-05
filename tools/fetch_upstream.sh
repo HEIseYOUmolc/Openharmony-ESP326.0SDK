@@ -15,3 +15,7 @@ if [ ! -d "$VENDOR_DIR/openharmony-kernel_liteos_m" ]; then
 fi
 
 echo "Upstream repositories are ready in $VENDOR_DIR"
+echo
+echo "Note: this script only fetches lightweight reference repositories."
+echo "For the standard OpenHarmony source tree, run:"
+echo "  make setup-ohos"

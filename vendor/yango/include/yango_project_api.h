@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 void demo_gpio_blink_run(void);
 void demo_uart_echo_run(void);
